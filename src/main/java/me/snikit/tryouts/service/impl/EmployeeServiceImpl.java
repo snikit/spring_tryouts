@@ -56,6 +56,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee update(Employee entity, Integer id) {
         Optional<Employee> optional = findById(id) ;
+
         if (optional.isPresent()) {
             return save(entity);
         }

@@ -2,9 +2,10 @@ package me.snikit.tryouts.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.Hibernate;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,49 +21,28 @@ public class Employee {
     private String dept;
     private Double salary;
 
+    @OneToMany(mappedBy = "manager")
+    @ToString.Exclude
+    private Set<Employee> subordinates = new HashSet<>();
 
-    public Integer getId() {
-        return id;
-    }
+    @ManyToOne
+    @JoinColumn(name = "manager_id")
+    private Employee manager;
 
-    public void setId(Integer id) {
+    public Employee(Integer id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDept() {
-        return dept;
-    }
-
-    public void setDept(String dept) {
-        this.dept = dept;
-    }
-
-    public Double getSalary() {
-        return salary;
-    }
-
-    public void setSalary(Double salary) {
-        this.salary = salary;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
-        return getId() != null && Objects.equals(getId(), employee.getId());
+        return Objects.equals(id, employee.id) && Objects.equals(name, employee.name) && Objects.equals(dept, employee.dept) && Objects.equals(salary, employee.salary) && Objects.equals(subordinates, employee.subordinates) && Objects.equals(manager, employee.manager);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(id, name, dept, salary, subordinates, manager);
     }
 }
