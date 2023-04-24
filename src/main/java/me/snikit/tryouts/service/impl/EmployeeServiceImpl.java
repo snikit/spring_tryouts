@@ -8,7 +8,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-//import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,10 +54,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee update(Employee entity, Integer id) {
-        Optional<Employee> optional = findById(id) ;
-
+        Optional<Employee> optional = findById(id);
         if (optional.isPresent()) {
-            return save(entity);
+            Employee existing = optional.get();
+
+            if (entity.getDept() != null)
+                existing.setDept(entity.getDept());
+
+            if (entity.getManager() != null)
+                existing.setManager(entity.getManager());
+
+            if (entity.getSalary() != null)
+                existing.setSalary(entity.getSalary());
+
+            if (entity.getName() != null)
+                existing.setName(entity.getName());
+
+            return save(existing);
         }
         return null;
     }
